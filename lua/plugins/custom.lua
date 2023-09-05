@@ -17,6 +17,19 @@ return {
     keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
     config = true,
   },
+  -- change some telescope options and a keymap to browse plugin files
+  {
+    "nvim-telescope/telescope.nvim",
+    keys = {
+      -- add a keymap to browse plugin files
+      -- stylua: ignore
+      {
+        "<leader>fp",
+        function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
+        desc = "Find Plugin File",
+      },
+    },
+  },
   -- Use <tab> for completion and snippets (supertab)
   -- first: disable default <tab> and <s-tab> behavior in LuaSnip
   {
@@ -31,6 +44,7 @@ return {
     dependencies = {
       "hrsh7th/cmp-emoji",
     },
+
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local has_words_before = function()
@@ -43,20 +57,14 @@ return {
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<Tab>"] = cmp.mapping(function(fallback)
+        ["<CR>"] = cmp.config.disable,
+        ["<Tab>"] = cmp.mapping.confirm({ select = true }),
+        ["C-n"] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            cmp.confirm({ select = true })
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- this way you will only jump inside the snippet region
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-        ["<C-n>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
+            -- You could replace select_next_item() with confirm({ select = true }) to get VS Code autocompletion behavior
             cmp.select_next_item()
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- this way you will only jump inside the snippet region
+          -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+          -- this way you will only jump inside the snippet region
           elseif luasnip.expand_or_jumpable() then
             luasnip.expand_or_jump()
           elseif has_words_before() then
