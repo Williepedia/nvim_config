@@ -1,4 +1,8 @@
 return {
+  -- add gruvbox
+  { "ellisonleao/gruvbox.nvim" },
+
+  -- Configure LazyVim to load gruvbox
   {
     "catppuccin/nvim",
     lazy = false,
@@ -7,7 +11,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin-macchiato",
+      colorscheme = "gruvbox",
     },
   },
   -- add symbols-outline
@@ -86,30 +90,5 @@ return {
         end, { "i", "s" }),
       })
     end,
-  },
-  {
-    "quarto-dev/quarto-nvim",
-    dev = false,
-    dependencies = {
-      {
-        "jmbuhr/otter.nvim",
-        dev = false,
-        dependencies = {
-          { "neovim/nvim-lspconfig" },
-        },
-        opts = {
-          lsp = {
-            hover = {
-              border = require("misc.style").border,
-            },
-          },
-        },
-      },
-    },
-    opts = {
-      lspFeatures = {
-        languages = { "r", "python", "julia", "bash", "lua", "html" },
-      },
-    },
   },
 }
